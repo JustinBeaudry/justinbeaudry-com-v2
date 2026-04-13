@@ -2,7 +2,7 @@
 
 A Next.js personal website with a **Cyberpunk Noir** aesthetic inspired by William Gibson's industrial futurism.
 
-## 🎨 Design Features
+## Design Features
 
 - **Deep Black Background** (#0a0a0a) with subtle neon cyan accents (#00ffff)
 - **Animated Grid Background** - Scrolling cyberpunk-style grid overlay
@@ -11,20 +11,21 @@ A Next.js personal website with a **Cyberpunk Noir** aesthetic inspired by Willi
 - **Typography** - Space Mono (headers) and Inter (body text)
 - **Framer Motion Animations** - Smooth entrance animations for content
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **Framework:** Next.js 16 (App Router)
+- **Runtime/PM:** Bun
+- **Framework:** Next.js 16 (App Router) + React 19
 - **Styling:** Tailwind CSS 4
 - **Animations:** Framer Motion
 - **Icons:** Lucide React
-- **Language:** TypeScript
+- **Language:** TypeScript (strict)
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Development Server
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -32,11 +33,11 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### Build for Production
 
 ```bash
-npm run build
-npm start
+bun run build
+bun run start
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 justinbeaudry-com-v2/
@@ -48,14 +49,14 @@ justinbeaudry-com-v2/
 └── package.json
 ```
 
-## 🎯 Key Components
+## Key Components
 
 - **Terminal Header** - Animated command prompt with location
 - **Bio Section** - Formatted professional bio with highlighted keywords
 - **Data Overlay** - Status indicators (location, online status)
 - **Corner Accents** - Decorative border elements
 
-## 📝 Customization
+## Customization
 
 ### Colors
 Edit `tailwind.config.ts` to modify the color scheme:
