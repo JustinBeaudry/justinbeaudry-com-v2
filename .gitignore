@@ -13,16 +13,18 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
+# build output
+/dist
 
 # misc
 .DS_Store
 *.pem
+
+# worktrees
+.worktrees/
+
+# superpowers brainstorm
+.superpowers/
 
 # debug
 npm-debug.log*

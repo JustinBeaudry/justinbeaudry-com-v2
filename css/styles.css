@@ -1,0 +1,769 @@
+/* ==========================================================================
+   Variables
+   ========================================================================== */
+
+:root {
+  --bg: #0a0a0a;
+  --accent: #c8a455;
+  --accent-dim: rgba(200, 164, 85, 0.15);
+  --accent-glow: rgba(200, 164, 85, 0.06);
+  --text-bright: #fff;
+  --text-primary: #c8c8c8;
+  --text-secondary: #999;
+  --text-muted: #888;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.25);
+  --edge-base: rgba(255, 255, 255, 0.1);
+  --edge-cross: rgba(255, 255, 255, 0.06);
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   Grid Background
+   ========================================================================== */
+
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page { position: relative; z-index: 1; }
+
+/* ==========================================================================
+   Skip Link
+   ========================================================================== */
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 8px 16px;
+  z-index: 200;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.skip-link:focus {
+  top: 8px;
+}
+
+/* ==========================================================================
+   Navigation
+   ========================================================================== */
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  position: sticky;
+  top: 0;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  animation: slideDown 0.6s ease-out;
+}
+
+nav .name {
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+nav .links {
+  display: flex;
+  gap: 28px;
+}
+
+nav .links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+nav .links a:hover,
+nav .links a.active {
+  color: var(--text-bright);
+}
+
+nav .links a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.hero {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 100px 40px 28px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-bright);
+  margin-bottom: 14px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease-out 0.2s forwards;
+}
+
+.hero .hero-sub {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease-out 0.4s forwards;
+}
+
+.hero .hero-body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  opacity: 0;
+  animation: fadeUp 0.7s ease-out 0.6s forwards;
+}
+
+/* ==========================================================================
+   Anchor (personality tagline)
+   ========================================================================== */
+
+.anchor {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px 40px 56px;
+  text-align: center;
+  opacity: 0;
+  animation: fadeUp 0.7s ease-out 0.8s forwards;
+}
+
+.anchor .tagline {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.anchor .aside {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Ecosystem Section
+   ========================================================================== */
+
+.ecosystem-section {
+  padding: 48px 40px 60px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.ecosystem-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+/* ==========================================================================
+   Graph Container
+   ========================================================================== */
+
+.ecosystem-graph {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+
+.ecosystem-graph svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   Edges (SVG)
+   ========================================================================== */
+
+.edge {
+  stroke: var(--edge-base);
+  stroke-width: 1;
+  fill: none;
+  transition: stroke 0.4s ease, stroke-width 0.4s ease, opacity 0.4s ease;
+}
+
+.edge.cross {
+  stroke: var(--edge-cross);
+  stroke-dasharray: 4 4;
+}
+
+.edge.drawing {
+  animation: drawLine 1s ease-out forwards;
+}
+
+.edge.drawing:nth-child(2) { animation-delay: 0.08s; }
+.edge.drawing:nth-child(3) { animation-delay: 0.16s; }
+.edge.drawing:nth-child(4) { animation-delay: 0.24s; }
+.edge.drawing:nth-child(5) { animation-delay: 0.5s; }
+.edge.drawing:nth-child(6) { animation-delay: 0.58s; }
+.edge.drawing:nth-child(7) { animation-delay: 0.66s; }
+
+.edge.breathing {
+  animation: breathe 6s ease-in-out infinite;
+}
+
+.edge.breathing:nth-child(2) { animation-delay: 0.8s; }
+.edge.breathing:nth-child(3) { animation-delay: 1.6s; }
+.edge.breathing:nth-child(4) { animation-delay: 2.4s; }
+.edge.breathing:nth-child(5) { animation-delay: 3.2s; }
+.edge.breathing:nth-child(6) { animation-delay: 4.0s; }
+.edge.breathing:nth-child(7) { animation-delay: 4.8s; }
+
+.edge.active {
+  stroke: rgba(200, 164, 85, 0.25);
+  stroke-width: 1.5;
+}
+
+.edge.dimmed {
+  opacity: 0.3;
+}
+
+/* ==========================================================================
+   Nodes
+   ========================================================================== */
+
+.node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.node:focus-visible .node-inner {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.node-inner {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 14px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.node:hover .node-inner {
+  border-color: var(--border-hover);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.02);
+}
+
+.node.selected .node-inner {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+
+/* -- Center node (larger) -- */
+
+.node.center .node-inner {
+  padding: 28px 36px;
+  background: rgba(200, 164, 85, 0.03);
+  border-color: rgba(200, 164, 85, 0.15);
+}
+
+.node.center .node-name {
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.node.center .node-role {
+  font-size: 13px;
+}
+
+.node.center .node-stat {
+  font-size: 11px;
+  margin-top: 8px;
+}
+
+/* -- Node text -- */
+
+.node-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-bright);
+  white-space: nowrap;
+}
+
+.node-role {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 3px;
+  white-space: nowrap;
+}
+
+.node-stat {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  margin-top: 6px;
+}
+
+/* ==========================================================================
+   Detail Panel
+   ========================================================================== */
+
+.detail-panel {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 40px;
+  min-height: 180px;
+}
+
+.detail-content {
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+}
+
+.detail-content.animate {
+  animation: fadeUp 0.35s ease-out;
+}
+
+.detail-content h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}
+
+.detail-content .detail-role {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.detail-content p {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--text-primary);
+}
+
+.detail-content .detail-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(200, 164, 85, 0.3);
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+
+.detail-content .detail-link:hover {
+  color: var(--text-bright);
+  border-color: var(--text-bright);
+}
+
+.detail-content .detail-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* -- Research inline -- */
+
+.research-inline {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.research-inline .pub-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.research-inline a {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  line-height: 1.5;
+  transition: color 0.2s;
+}
+
+.research-inline a:hover {
+  color: var(--accent);
+}
+
+.research-inline a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.research-inline .research-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Contact
+   ========================================================================== */
+
+.contact {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 80px 40px 40px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.contact-location {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.contact-links a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 10px 20px;
+  border: 1px solid var(--border);
+  transition: all 0.25s ease;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.contact-links a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+.contact-links a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.footer {
+  text-align: center;
+  padding: 48px 40px 24px;
+  font-family: var(--font-mono);
+}
+
+.footer-consultancy {
+  font-size: 11px;
+  color: #777;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.footer-consultancy a {
+  color: #888;
+  text-decoration: none;
+  border-bottom: 1px solid #555;
+  padding-bottom: 1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.footer-consultancy a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.footer-consultancy a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.footer-copy {
+  font-size: 10px;
+  color: #555;
+  letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   Focus Styles (global)
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Animations — Keyframes
+   ========================================================================== */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+@keyframes nodeIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.88); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ==========================================================================
+   prefers-reduced-motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+  }
+
+  .edge.breathing {
+    animation: none !important;
+  }
+
+  .hero h1,
+  .hero .hero-sub,
+  .hero .hero-body,
+  .anchor {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Progressive Enhancement
+   ========================================================================== */
+
+/* When JS loads, it adds js-loaded to body. Nodes start hidden for entrance animation. */
+.js-loaded .node {
+  opacity: 0;
+}
+
+/* Nodes with the 'entered' class become visible (JS adds this during animation) */
+.js-loaded .node.entered {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Scroll-reveal utility
+   ========================================================================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   Responsive — Tablet (768px - 1024px)
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .ecosystem-graph {
+    overflow: hidden;
+    padding: 0 10px;
+  }
+}
+
+/* ==========================================================================
+   Responsive — Mobile (<768px)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* Nav */
+  nav {
+    padding: 16px 20px;
+    font-size: 10px;
+  }
+
+  nav .links {
+    gap: 14px;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 60px 20px 24px;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .hero .hero-sub {
+    font-size: 18px;
+  }
+
+  /* Anchor */
+  .anchor {
+    padding: 16px 20px 40px;
+  }
+
+  /* Ecosystem */
+  .ecosystem-section {
+    padding: 32px 20px 60px;
+  }
+
+  .ecosystem-label {
+    margin-bottom: 24px;
+  }
+
+  /* Graph — becomes 2x2 grid */
+  .ecosystem-graph {
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 10px;
+    justify-items: center;
+  }
+
+  .ecosystem-graph svg {
+    display: none;
+  }
+
+  .node {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100%;
+  }
+
+  .node.center {
+    grid-column: 1 / -1;
+    max-width: 300px;
+  }
+
+  .node:not(.center) {
+    max-width: 100%;
+  }
+
+  .node-name {
+    white-space: normal;
+  }
+
+  .node-inner {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  /* Mobile node animation override */
+  @keyframes nodeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* Detail panel */
+  .detail-panel {
+    padding: 12px 20px;
+  }
+
+  /* Contact */
+  .contact {
+    padding: 40px 20px 32px;
+  }
+
+  .contact-links {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .contact-links a {
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 32px 20px 20px;
+  }
+}
