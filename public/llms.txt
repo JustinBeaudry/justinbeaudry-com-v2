@@ -1,0 +1,20 @@
+# Justin Beaudry
+
+> Engineering leader, community builder, Toledo OH
+
+## Current Roles
+- Director of Engineering, Actual Reality Technologies
+- Founder, Toledo Codes
+- Director of Technology & Board Treasurer, EmpoweredAI
+- Regional Manager — Midwest, AI Collective
+
+## About
+Software engineer with 15+ years of experience. Spent a decade building at startups in San Francisco and Austin (CreativeLive, Instawork, United Airlines, Vida Health). Studied philosophy at the University of Toledo. Made a deliberate move home to bridge Silicon Valley scale and Midwest talent.
+
+## Research
+- Quantifying Label-Induced Bias in LLM Self- and Cross-Evaluations (arXiv, 2025) — https://arxiv.org/abs/2508.21164
+
+## Contact
+- LinkedIn: https://linkedin.com/in/justinbeaudry
+- GitHub: https://github.com/JustinBeaudry
+- Consulting: Beaudry Software & Systems (https://beaudry.dev)

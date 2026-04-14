@@ -1,0 +1,38 @@
+:root {
+  --bg: #0a0a0a;
+  --accent: #c8a455;
+  --accent-dim: rgba(200, 164, 85, 0.15);
+  --accent-glow: rgba(200, 164, 85, 0.06);
+  --text-bright: #fff;
+  --text-primary: #c8c8c8;
+  --text-secondary: #999;
+  --text-muted: #888;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.25);
+  --edge-base: rgba(255, 255, 255, 0.1);
+  --edge-cross: rgba(255, 255, 255, 0.06);
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page { position: relative; z-index: 1; }
