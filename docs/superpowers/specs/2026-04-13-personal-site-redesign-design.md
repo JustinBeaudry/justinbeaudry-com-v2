@@ -212,80 +212,44 @@ Breathing does not resume after user interaction. Once the user clicks, the grap
 ## Technical Implementation
 
 ### Stack
-- Next.js (App Router) + React 19 + TypeScript
-- Tailwind CSS 4 for base styles
-- Framer Motion for hero/detail animations
-- Raw SVG for graph edges (simpler than Framer for path animation)
-- `next/font/google` for font loading
+- **Plain HTML** — single `index.html`
+- **Plain CSS** — hand-written, no framework (design is simple enough)
+- **Vanilla JavaScript** — for graph interaction, scroll tracking, entrance animations
+- **Vite** — dev server with hot reload, static build output for deployment
+- Google Fonts loaded via `<link>` tags (Outfit + IBM Plex Mono)
+
+No React, no Next.js, no TypeScript, no Tailwind. The mockup (ecosystem-v8.html) is essentially the implementation — clean it up, fix known issues, add SEO.
 
 ### Graph Rendering Strategy
-The ecosystem graph is the primary implementation risk. Key decisions:
+The graph uses the same approach proven in the mockup:
 
-1. **`EcosystemGraph.tsx` must be a client component** (`'use client'`). It depends on DOM measurement and user interaction.
-2. **Node positions:** Use percentage-based CSS positioning (same as mockup). Measure actual pixel positions via refs after layout.
-3. **Edge coordinates:** Compute in `useLayoutEffect` after nodes are mounted. Store node center positions in a ref. Recompute on `ResizeObserver` callback (debounced, 150ms).
-4. **Do not use `getBoundingClientRect` in `useEffect`** — it runs too late. Use `useLayoutEffect` to avoid edge-to-wrong-position flicker.
-5. **SVG edges:** Render as a stable element list keyed by edge pair. Animate via CSS classes/transitions, not by rebuilding DOM on every click.
-6. **Resize:** Attach a `ResizeObserver` to the graph container instead of `window.resize`. Debounce at 150ms.
-7. **SSR:** The graph renders nothing on the server. Use a client-only wrapper or `dynamic(() => import('./EcosystemGraph'), { ssr: false })`.
+1. **Node positions:** Percentage-based CSS absolute positioning within a relative container.
+2. **Edge coordinates:** Computed after DOM layout via `getBoundingClientRect()` relative to graph container. Quadratic bezier SVG paths.
+3. **Edge path lengths:** Use `SVGPathElement.getTotalLength()` for accurate stroke-dasharray values.
+4. **Resize:** `ResizeObserver` on the graph container, debounced at 150ms.
+5. **Animation state:** Managed via CSS classes (`drawing`, `breathing`, `active`, `dimmed`) toggled by JS. No framework state management needed.
 
-### Data Types
-```typescript
-type NodeId = 'justin' | 'actual-reality' | 'toledo-codes' | 'empowered-ai' | 'ai-collective';
-
-interface GraphNode {
-  id: NodeId;
-  name: string;
-  role: string;
-  stat: string;
-  position: { left: string; top: string };
-  variant: 'center' | 'peripheral';
-  ariaLabel: string;
-  detail: NodeDetail;
-}
-
-interface NodeDetail {
-  name: string;
-  role: string;
-  description: string;
-  link?: { text: string; url: string };
-  research?: { label: string; title: string; meta: string; url: string };
-}
-
-interface EdgeDefinition {
-  from: NodeId;
-  to: NodeId;
-  type: 'hub' | 'cross';
-}
+### File Structure
 ```
-
-### Component Architecture
+index.html            # Single page — all HTML structure, meta tags, JSON-LD
+css/
+  styles.css          # All styles — variables, layout, graph, animations, responsive
+js/
+  main.js             # Graph interaction, scroll tracking, entrance animations
+public/
+  llms.txt            # Static file served as-is
+  og.png              # Social card image (1200x630)
+  favicon.ico         # Favicon
+vite.config.js        # Minimal Vite config for dev server + build
+package.json          # Just vite as a dev dependency
 ```
-app/
-  page.tsx              # Server component shell, imports client sections
-  layout.tsx            # Root layout with metadata, fonts, JSON-LD
-  globals.css           # CSS variables, grid background
-  llms.txt/route.ts     # Plain text route handler
-  not-found.tsx         # Custom 404 (dark theme, link back home)
-components/
-  Navigation.tsx        # Sticky nav with IntersectionObserver-based section tracking
-  Hero.tsx              # Hero + personality anchor, Framer Motion entrance
-  EcosystemGraph.tsx    # 'use client' — graph orchestrator, selection state, SVG edges
-  EcosystemNode.tsx     # Individual node (center vs peripheral via variant prop)
-  DetailPanel.tsx       # Receives selected node data via props, Framer AnimatePresence
-  Contact.tsx           # Contact section
-  Footer.tsx            # Footer with consultancy mention
-lib/
-  graph-data.ts         # Typed node/edge/detail data (see Data Types above)
-  use-edge-layout.ts    # Hook: ResizeObserver + useLayoutEffect → node positions → edge paths
-```
-
-**State management:** Local component state in `EcosystemGraph.tsx`. Selected node ID in `useState`. Edge animation phase in a ref. No external store needed.
 
 ### Progressive Enhancement
-- Nodes must be visible without JS. Set initial `opacity: 1` in CSS. JavaScript adds a `.js-loaded` class to the body and overrides to `opacity: 0` for animation entrance. Without JS, nodes display statically with no animation.
-- Detail panel shows Justin's info as static HTML. JS enables click-to-switch.
-- SVG edges are JS-only (they require DOM measurement). Without JS, the graph is a grid of cards without lines — acceptable degradation.
+- All content is in `index.html` as semantic HTML — fully readable without JS.
+- Nodes are visible by default (`opacity: 1`). JS adds a `js-loaded` class to `<body>` and sets nodes to `opacity: 0` for entrance animation.
+- Detail panel renders Justin's info as static HTML. JS enables click-to-switch.
+- SVG edges are JS-only (require DOM measurement). Without JS, the graph is a grid of cards without lines — acceptable degradation.
+- Entrance animations use CSS `@keyframes` triggered by JS adding classes. `prefers-reduced-motion` media query disables all animations in CSS.
 
 ### SEO
 - Semantic HTML5 (`<header>`, `<main>`, `<section>`, `<footer>`, `<nav>`)
@@ -296,8 +260,9 @@ lib/
 - Canonical URL
 - **og:image:** Generate a static social card image (dark background, name, tagline). Store in `/public/og.png`. 1200x630px.
 - **Favicon:** Create a minimal favicon (initials "JB" or a simple mark). Include apple-touch-icon.
+- All meta tags directly in `<head>` of `index.html` — no framework abstraction.
 
-### schema.org (JSON-LD in layout.tsx)
+### schema.org (JSON-LD in index.html `<head>`)
 ```json
 {
   "@context": "https://schema.org",
@@ -329,7 +294,7 @@ Separate `ScholarlyArticle` entry:
 ```
 
 ### llms.txt
-Serve `/llms.txt` at site root via route handler (`app/llms.txt/route.ts`):
+Serve `/llms.txt` as a static file in `public/`:
 ```
 # Justin Beaudry
 
@@ -383,9 +348,9 @@ Serve `/llms.txt` at site root via route handler (`app/llms.txt/route.ts`):
 
 ### Miscellaneous
 - **No analytics** for initial launch. Can add later if needed.
-- **404 page:** Custom `not-found.tsx` with dark theme, "Page not found" message, link back to home.
+- **404 page:** Host-level config (Vercel/Netlify `404.html`) or not needed for single-page site.
 - **Print styles:** Not required for initial launch.
-- **Transition from current site:** Delete existing `page.tsx`, `globals.css`, and `tailwind.config.ts` content. Replace entirely — no code to preserve from the cyberpunk scaffold.
+- **Transition from current site:** Delete the entire Next.js scaffold (app/, components/, tailwind.config.ts, next.config.ts, postcss.config.mjs, tsconfig.json, etc.). Replace with vanilla HTML/CSS/JS + Vite.
 
 ## Copy Status
 
